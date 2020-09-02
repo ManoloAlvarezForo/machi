@@ -6,6 +6,7 @@ import Card from '../../components/Card/Card';
 import {Button} from 'react-native-ui-lib';
 import {FavoriteIcon} from '../../components/FavoriteIcon/FavoriteIcon';
 import {BASE_URL} from '../../config';
+import CornerLabel from '../../components/CornerLabel/CornerLabel';
 const {width} = Dimensions.get('window');
 
 export default function ({product}) {
@@ -15,7 +16,6 @@ export default function ({product}) {
   if (product.client) {
     brand = product.client.brand;
   }
-  console.log('URL: ', product.thumbs);
   return (
     <Card
       key={product.id}
@@ -50,10 +50,40 @@ export default function ({product}) {
           flex: 1,
           flexDirection: 'column',
         }}>
-        <Text style={styles.itemTitle}>{product.productName}</Text>
-        <Text style={{fontWeight: 'bold', fontSize: 11}}>
-          Bs. {product.price}
-        </Text>
+        <Text style={styles.itemTitle}>{product.name}</Text>
+        <View style={{display: 'flex', flexDirection: 'row'}}>
+          {product.promo && (
+            <View
+              style={{borderRadius: 2, display: 'flex', alignSelf: 'center'}}>
+              <Text
+                style={{
+                  borderRadius: 2,
+                  backgroundColor: 'red',
+                  color: '#fff',
+                  marginRight: 4,
+                  fontSize: 9,
+                  fontWeight: 'bold',
+                  paddingHorizontal: 2,
+                }}>
+                Promo
+              </Text>
+            </View>
+          )}
+          <Text
+            style={{
+              fontWeight: product.promo === true ? '300' : 'bold',
+              fontSize: 11,
+              textDecorationLine:
+                product.promo === true ? 'line-through' : 'none',
+            }}>
+            Bs. {product.price}
+          </Text>
+          {product.promo === true && (
+            <Text style={{fontWeight: 'bold', fontSize: 11, marginLeft: 3}}>
+              Bs. {product.promoPrice}
+            </Text>
+          )}
+        </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <View
             style={{
@@ -89,7 +119,7 @@ export default function ({product}) {
             label="Pedir"
             link
             labelStyle={{fontWeight: 'bold'}}
-            onPress={() => alert(`Pedir: ${product.productName}`)}
+            onPress={() => alert(`Pedir: ${product.name}`)}
           />
         </View>
       </View>

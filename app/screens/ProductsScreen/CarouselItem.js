@@ -9,7 +9,7 @@ const CarouselItem = ({item}) => {
     <View style={styles.cardView}>
       <Image style={styles.image} source={{uri: item.url}} />
       <CornerLabel
-        text="Oferta"
+        text="Promo"
         cornerRadius={54}
         style={{backgroundColor: '#ff2134', height: 18}}
         textStyle={{fontSize: 11, fontWeight: 'bold', color: '#fff'}}

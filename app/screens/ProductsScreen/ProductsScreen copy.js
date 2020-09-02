@@ -37,7 +37,6 @@ const ProductsStackScreen = () => (
           </View>
         ),
         headerBackTitle: 'Productos',
-        //TODO: Change title when the scren is monunted.
         headerTitle: 'Comida',
         headerTitleAlign: 'center',
         headerTintColor: '#ffffff',

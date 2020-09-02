@@ -22,6 +22,7 @@ import {View, Image} from 'react-native-ui-lib';
 import stylesDetails from './styles';
 import {BASE_URL} from '../../config';
 const Details = ({product}) => {
+  console.log('IMAGE: ', product.thumbs[0].url);
   return (
     <ScrollView style={stylesDetails.container}>
       <View style={stylesDetails.carouselContainer}>

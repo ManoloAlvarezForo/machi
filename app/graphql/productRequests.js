@@ -4,6 +4,8 @@ export const PRODUCTS = gql`
   query products {
     products {
       id
+      promo
+      promoPrice
       thumbs {
         url
         formats {
@@ -24,7 +26,7 @@ export const PRODUCTS = gql`
         }
       }
       description
-      productName
+      name
       price
     }
   }
@@ -34,9 +36,11 @@ export const PRODUCT_BY_ID = gql`
   query product($id: String) {
     product(id: $id) {
       id
+      promoPrice
       productId
-      productName
+      name
       description
+      promo
       client {
         id
         brand
@@ -57,6 +61,31 @@ export const PRODUCT_BY_ID = gql`
         }
       }
       price
+    }
+  }
+`;
+
+export const CATEGORIES = gql`
+  query comments($productId: String) {
+    comments(productId: $productId) {
+      id
+      user
+      userId
+      comment
+      createdDate
+    }
+  }
+`;
+
+export const TYPES = gql`
+  query types {
+    types {
+      id
+      label
+      name
+      thumb {
+        url
+      }
     }
   }
 `;

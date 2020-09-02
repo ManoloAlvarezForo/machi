@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   FlatList,
@@ -27,8 +26,7 @@ import Product from './Product';
 import ProductType from './ProductType';
 const {width} = Dimensions.get('window');
 
-//TODO We need to implement logic to re render this component according the category product selected.
-const Promos = ({id, type}) => {
+const Promos = () => {
   const {data, loading, error} = useQuery(PRODUCTS, {
     fetchPolicy: 'cache-and-network',
   });
@@ -85,14 +83,7 @@ const SliderItems = () => {
   );
 };
 
-const buildRenderType = (type, item) => {
-  if (type === 'category') {
-    return <ProductType type={item} />;
-  }
-};
-
-const Products = (id, type) => {
-  // TODO: id is used to get Graphql data.
+const Products = () => {
   const {data, loading, error} = useQuery(TYPES, {
     fetchPolicy: 'cache-and-network',
   });
@@ -105,12 +96,10 @@ const Products = (id, type) => {
     return <Error error={error} />;
   }
 
-  function renderTypes({item}) {
-    return buildRenderType(type, item);
+  function renderTypes({item: type}) {
+    return <ProductType type={type} />;
   }
-
   const types = data.types;
-
   return (
     <FlatList
       ListHeaderComponent={() => (
@@ -134,58 +123,25 @@ const Products = (id, type) => {
   );
 };
 
-const getMainExploreComponents = () => {
-  const exploreComponents = [
-    {
-      id: 1,
-      title: 'Promo',
-      type: 'Promo',
-      component: <Promos />,
-    },
-    {
-      id: 2,
-      title: 'Productos',
-      type: 'Products',
-      component: <Products key="products" />,
-    },
-  ];
-  return exploreComponents;
-};
+const exploreComponents = [
+  {
+    id: 1,
+    title: 'Promo',
+    type: 'Promo',
+    component: <Promos />,
+  },
+  {
+    id: 2,
+    title: 'Productos',
+    type: 'Products',
+    component: <Products key="products" />,
+  },
+];
 
-const buildProductList = (id, type) => {
-  const newExploreComponents = [
-    {
-      id: 1,
-      title: 'Promo',
-      type: 'Promo',
-      component: <Promos id={id} type={type} />,
-    },
-    {
-      id: 2,
-      title: 'Productos',
-      type: 'Products',
-      component: <Products key="products" id={id} type={type} />,
-    },
-  ];
-  return newExploreComponents;
-};
-
-export default function ProductsList({route}) {
-  const {
-    params: {id = '', type = ''},
-  } = route;
-
+export default function ProductsList({navigation}) {
   function renderItem({item}) {
     return item.component;
   }
-
-  const buildProductListComponents = () => {
-    if (id) {
-      return buildProductList(id, type);
-    }
-
-    return getMainExploreComponents();
-  };
 
   return (
     <>
@@ -193,7 +149,7 @@ export default function ProductsList({route}) {
       <FlatList
         style={styles.productsList}
         contentContainerStyle={styles.productsListContainer}
-        data={buildProductListComponents}
+        data={exploreComponents}
         renderItem={renderItem}
         keyExtractor={(item) => `${item.id}`}
       />
