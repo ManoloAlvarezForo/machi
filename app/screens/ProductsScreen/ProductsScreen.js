@@ -8,6 +8,7 @@ import HeaderSearchProducts from '../../components/HeaderFavoriteProductsCount/H
 import {HeaderStyleInterpolators} from '@react-navigation/stack';
 import {StatusBar, View} from 'react-native';
 import Logo from '../Logo/Logo';
+import HeaderLeftButton from '../../components/LeftButton/LeftButton';
 const ProductsStack = createStackNavigator();
 const ProductsStackScreen = () => (
   <ProductsStack.Navigator mode="modal">
@@ -27,7 +28,7 @@ const ProductsStackScreen = () => (
       }}
     />
     <ProductsStack.Screen
-      name={'FoodProductsList'}
+      name={'ProductListCategory'}
       component={ProductsList}
       options={{
         headerRight: () => (
@@ -36,9 +37,9 @@ const ProductsStackScreen = () => (
             <HeaderFavoriteProductsCount />
           </View>
         ),
-        headerBackTitle: 'Productos',
+        // headerBackTitle: 'Productos',
         //TODO: Change title when the scren is monunted.
-        headerTitle: 'Comida',
+        // headerTitle: 'Comida',
         headerTitleAlign: 'center',
         headerTintColor: '#ffffff',
         headerStyle: {backgroundColor: '#ff2134'},
@@ -47,12 +48,17 @@ const ProductsStackScreen = () => (
     <ProductsStack.Screen
       name={'ProductDetails'}
       options={{
-        headerTransparent: 'true',
+        headerTitle: '',
+        headerLeft: () => (
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <HeaderLeftButton />
+          </View>
+        ),
+        headerTransparent: 'false',
         headerTitleAlign: 'center',
-        headerTitle: 'Detalle',
-        headerBackTitle: 'Productos',
-        headerTintColor: '#ffffff',
-        headerStyle: {backgroundColor: '#000000'},
+        // headerBackTitle: 'Productos',
+        // headerTintColor: '#ffffff',
+        // headerStyle: {backgroundColor: '#000000'},
       }}
       component={ProductDetails}
     />

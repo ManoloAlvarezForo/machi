@@ -1,5 +1,37 @@
 import {gql} from '@apollo/client';
 
+export const PRODUCTS_BY_CATEGORY = gql`
+  query productsByCategory($categoryId: String) {
+    productsByCategory(categoryId: $categoryId) {
+      id
+      promo
+      promoPrice
+      thumbs {
+        url
+        formats {
+          thumbnail {
+            url
+          }
+          small {
+            url
+          }
+        }
+      }
+      client {
+        id
+        brand
+        responsible
+        thumb {
+          url
+        }
+      }
+      description
+      name
+      price
+    }
+  }
+`;
+
 export const PRODUCTS = gql`
   query products {
     products {
@@ -66,20 +98,8 @@ export const PRODUCT_BY_ID = gql`
 `;
 
 export const CATEGORIES = gql`
-  query comments($productId: String) {
-    comments(productId: $productId) {
-      id
-      user
-      userId
-      comment
-      createdDate
-    }
-  }
-`;
-
-export const TYPES = gql`
-  query types {
-    types {
+  query categories($parentId: String) {
+    categories(parentId: $parentId) {
       id
       label
       name

@@ -12,8 +12,9 @@ export default function Slider({renderItems, title, loading}) {
       {title !== undefined && (
         <Text
           style={{
+            color: '#252525',
             marginLeft: 10,
-            fontSize: 20,
+            fontSize: 17,
             fontWeight: 'bold',
             marginBottom: 10,
           }}>

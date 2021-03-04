@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, Text, Image, Dimensions, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -6,7 +7,7 @@ import Card from '../../components/Card/Card';
 import {Button} from 'react-native-ui-lib';
 import {FavoriteIcon} from '../../components/FavoriteIcon/FavoriteIcon';
 import {BASE_URL} from '../../config';
-import CornerLabel from '../../components/CornerLabel/CornerLabel';
+// import CornerLabel from '../../components/CornerLabel/CornerLabel';
 const {width} = Dimensions.get('window');
 
 export default function ({product}) {
@@ -44,13 +45,16 @@ export default function ({product}) {
       />
       <View
         style={{
-          paddingTop: 3,
           marginLeft: 5,
           marginRight: 7,
           flex: 1,
           flexDirection: 'column',
         }}>
-        <Text style={styles.itemTitle}>{product.name}</Text>
+        <View style={styles.itemTitleContainer}>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemTitle}>
+            {product.name}
+          </Text>
+        </View>
         <View style={{display: 'flex', flexDirection: 'row'}}>
           {product.promo && (
             <View
@@ -116,7 +120,7 @@ export default function ({product}) {
             text90
             round={false}
             color="#252525"
-            label="Pedir"
+            label="Lo Quiero!"
             link
             labelStyle={{fontWeight: 'bold'}}
             onPress={() => alert(`Pedir: ${product.name}`)}
@@ -142,6 +146,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     paddingVertical: 8,
     marginHorizontal: 8,
+  },
+  itemTitleContainer: {
+    paddingTop: 2,
+    marginRight: 13,
   },
   itemTitle: {
     fontSize: 13,

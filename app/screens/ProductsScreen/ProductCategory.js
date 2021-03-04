@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, Text, Image, Dimensions, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -23,8 +24,9 @@ export default function ({type}) {
         width: width / 2 - 15,
       }}
       onPress={() => {
-        navigation.navigate('FoodProductsList', {
+        navigation.navigate('ProductListCategory', {
           id,
+          category: label,
         });
       }}>
       <Image
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     color: 'white',
-    fontSize: 22,
+    fontSize: 17,
     shadowColor: '#000',
     shadowOffset: {width: 0.8, height: 0.8},
     shadowOpacity: 1,

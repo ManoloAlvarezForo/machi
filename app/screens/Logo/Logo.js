@@ -1,12 +1,12 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import DeliveryIcon from '../../components/FavoriteIcon/DeliveryIcon';
+// import DeliveryIcon from '../../components/FavoriteIcon/DeliveryIcon';
+import Logo from '../../components/Logo/LogoSvg';
 
 export default function () {
   return (
-    <View style={styles.logoContainer}>
-      <Text style={styles.logoText}>Machi</Text>
-      <DeliveryIcon style={styles.icon} />
+    <View>
+      <Logo style={styles.icon} />
     </View>
   );
 }

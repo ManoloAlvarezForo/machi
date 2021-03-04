@@ -1,17 +1,27 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {ActivityIndicator, StyleSheet} from 'react-native';
+import {ActivityIndicator, StyleSheet, Dimensions, View} from 'react-native';
+const {width} = Dimensions.get('window');
 
 export function Loading({hasBackground}) {
   return (
-    <ActivityIndicator
-      style={[
-        styles.loadingIndicator,
-        {
-          backgroundColor: hasBackground ? '#fafafa' : 'none',
-        },
-      ]}
-    />
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: width,
+      }}>
+      <ActivityIndicator
+        style={[
+          styles.loadingIndicator,
+          {
+            backgroundColor: hasBackground ? '#fafafa' : 'none',
+          },
+        ]}
+      />
+    </View>
   );
 }
 

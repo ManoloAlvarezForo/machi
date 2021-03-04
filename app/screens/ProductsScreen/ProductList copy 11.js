@@ -12,11 +12,7 @@ import {
 } from 'react-native';
 import {useQuery} from '@apollo/client';
 
-import {
-  PRODUCTS,
-  CATEGORIES,
-  PRODUCTS_BY_CATEGORY,
-} from '../../graphql/productRequests';
+import {PRODUCTS, CATEGORIES} from '../../graphql/productRequests';
 // import Product from '../../components/Product/Product';
 import {Loading} from '../../components/Loading/Loading';
 import Error from '../../components/Error/Error';
@@ -70,18 +66,14 @@ const Promos = ({id = null, type}) => {
   };
 
   return (
-    <Slider
-      itemRender={Product}
-      renderItems={promoProducts}
-      title="Promociones y descuentos"
-    />
+    <Slider itemRender={Product} renderItems={promoProducts} title="Promos" />
   );
 };
 
 const CategoryProduct = ({id, type}) => {
-  const {data, loading, error} = useQuery(PRODUCTS_BY_CATEGORY, {
+  const {data, loading, error} = useQuery(PRODUCTS, {
     variables: {
-      categoryId: id,
+      parent: id,
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -95,12 +87,10 @@ const CategoryProduct = ({id, type}) => {
       return <Error error={error} />;
     }
 
-    const {productsByCategory} = data;
-
     return (
       <>
-        {productsByCategory.length ? (
-          productsByCategory.map((product) => (
+        {data.products.length ? (
+          data.products.map((product) => (
             <Product key={product.id} product={product} />
           ))
         ) : (
@@ -150,85 +140,90 @@ const CategoryProduct = ({id, type}) => {
 //     />
 //   );
 // };
-const buildRenderCategoryTwo = (item) => {
+
+const buildRenderCategory = (item) => {
   return <ProductCategory type={item} />;
 };
 
-const buildRenderCategory = (items) => {
-  return (
-    <>
-      {items.map((item) => (
-        <CategoryProduct type={item.name} id={item.id} />
-      ))}
-    </>
-  );
+const buildRenderProducts = (id, type) => {
+  return <CategoryProduct id={id} type={type} />;
 };
 
-// const buildRenderProducts = (id, type) => {
-//   return <CategoryProduct id={id} type={type} />;
-// };
-
-// const CategoryProds = ({id, type}) => {
-//   const {data, loading, error} = useQuery(PRODUCTS, {
-//     variables: {
-//       parent: id,
-//     },
-//     fetchPolicy: 'cache-and-network',
-//   });
-// };
-
-const CategoryProductsComponent = ({id, type}) => {
-  // TODO: id is used to get Graphql data.
-  const {data, loading, error} = useQuery(CATEGORIES, {
-    variables: {parentId: id},
+const CategoryProds = ({id, type}) => {
+  const {data, loading, error} = useQuery(PRODUCTS, {
+    variables: {
+      parent: id,
+    },
     fetchPolicy: 'cache-and-network',
   });
+};
 
-  if (loading) {
-    return <Loading hasBackground />;
-  }
+// const CategoryProductsComponent = ({id, type, title}) => {
+//   // TODO: id is used to get Graphql data.
+//   const {data, loading, error} = useQuery(CATEGORIES, {
+//     variables: {parent: id},
+//     fetchPolicy: 'cache-and-network',
+//   });
 
-  if (error) {
-    return <Error error={error} />;
-  }
+//   if (loading) {
+//     return <Loading hasBackground />;
+//   }
 
-  const {categories} = data;
+//   if (error) {
+//     return <Error error={error} />;
+//   }
 
-  // function renderItems({item}) {
-  //   if (categories || categories.length) {
-  //     return buildRenderCategory(item);
-  //   } else {
-  //     return buildRenderProducts(id, type);
-  //   }
-  // }
+//   const {categories} = data;
 
+//   function renderItems({item}) {
+//     if (categories || categories.length) {
+//       return buildRenderCategory(item);
+//     } else {
+//       return buildRenderProducts(id, type);
+//     }
+//   }
+
+//   return (
+//     <>
+//     {
+//       categories.length ? (
+//         <RenderItems items={categories} /> : <
+//       )
+//     }
+//     </>
+//   );
+// };
+
+const RenderItems = ({title, items}) => {
+  const renderItemCategories = (item) => {
+    return buildRenderCategory(item);
+  };
   return (
-    <>
-      {categories.length ? (
-        <RenderItems key="renderItems" items={categories} />
-      ) : (
-        <Products key="renderProducts" id={id} title={type} />
+    <FlatList
+      ListHeaderComponent={() => (
+        <Text
+          style={{
+            color: '#252525',
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginBottom: 10,
+          }}>
+          {title}
+        </Text>
       )}
-    </>
+      numColumns={2}
+      style={styles.products}
+      contentContainerStyle={styles.products}
+      data={items}
+      renderItem={renderItemCategories}
+      keyExtractor={(item) => `${item.id}`}
+    />
   );
 };
 
-const RenderItems = ({items}) => {
-  return (
-    <>
-      {items.map((item) => (
-        <CategoryProduct key={item.name} type={item.name} id={item.id} />
-      ))}
-    </>
-  );
-};
-
-const Products = ({id, title}) => {
+const Products = ({id, type, title}) => {
   // TODO: id is used to get Graphql data.
-  const {data, loading, error} = useQuery(PRODUCTS_BY_CATEGORY, {
-    variables: {
-      categoryId: id,
-    },
+  const {data, loading, error} = useQuery(PRODUCTS, {
     fetchPolicy: 'cache-and-network',
   });
 
@@ -241,10 +236,10 @@ const Products = ({id, title}) => {
   }
 
   function renderCategories({item}) {
-    return buildRenderCategoryTwo(item);
+    return buildRenderCategory(item);
   }
 
-  const {productsByCategory} = data;
+  const {categories} = data;
 
   return (
     <FlatList
@@ -262,7 +257,7 @@ const Products = ({id, title}) => {
       numColumns={2}
       style={styles.products}
       contentContainerStyle={styles.products}
-      data={productsByCategory}
+      data={categories}
       renderItem={renderCategories}
       keyExtractor={(item) => `${item.id}`}
     />
@@ -280,7 +275,7 @@ const MainCategories = ({id, type, title}) => {
   // TODO: id is used to get Graphql data.
   const {data, loading, error} = useQuery(CATEGORIES, {
     variables: {
-      parentId: id,
+      parent: id,
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -294,7 +289,7 @@ const MainCategories = ({id, type, title}) => {
   }
 
   function renderCategories({item}) {
-    return buildRenderCategoryTwo(item);
+    return buildRenderCategory(item);
   }
 
   const categories = data.categories;
@@ -305,7 +300,7 @@ const MainCategories = ({id, type, title}) => {
         <Text
           style={{
             color: '#252525',
-            fontSize: 17,
+            fontSize: 20,
             fontWeight: 'bold',
             marginBottom: 10,
           }}>
@@ -352,9 +347,7 @@ const buildProductList = (id, type) => {
       id: 2,
       title: 'Productos',
       type: 'Products',
-      component: (
-        <CategoryProductsComponent key="products" id={id} type={type} />
-      ),
+      component: <Products key="products" id={id} type={type} />,
     },
   ];
   return newExploreComponents;

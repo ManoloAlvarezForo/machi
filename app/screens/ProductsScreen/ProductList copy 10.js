@@ -12,11 +12,7 @@ import {
 } from 'react-native';
 import {useQuery} from '@apollo/client';
 
-import {
-  PRODUCTS,
-  CATEGORIES,
-  PRODUCTS_BY_CATEGORY,
-} from '../../graphql/productRequests';
+import {PRODUCTS, CATEGORIES} from '../../graphql/productRequests';
 // import Product from '../../components/Product/Product';
 import {Loading} from '../../components/Loading/Loading';
 import Error from '../../components/Error/Error';
@@ -70,18 +66,14 @@ const Promos = ({id = null, type}) => {
   };
 
   return (
-    <Slider
-      itemRender={Product}
-      renderItems={promoProducts}
-      title="Promociones y descuentos"
-    />
+    <Slider itemRender={Product} renderItems={promoProducts} title="Promos" />
   );
 };
 
 const CategoryProduct = ({id, type}) => {
-  const {data, loading, error} = useQuery(PRODUCTS_BY_CATEGORY, {
+  const {data, loading, error} = useQuery(PRODUCTS, {
     variables: {
-      categoryId: id,
+      parent: id,
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -95,12 +87,10 @@ const CategoryProduct = ({id, type}) => {
       return <Error error={error} />;
     }
 
-    const {productsByCategory} = data;
-
     return (
       <>
-        {productsByCategory.length ? (
-          productsByCategory.map((product) => (
+        {data.products.length ? (
+          data.products.map((product) => (
             <Product key={product.id} product={product} />
           ))
         ) : (
@@ -180,7 +170,7 @@ const buildRenderCategory = (items) => {
 const CategoryProductsComponent = ({id, type}) => {
   // TODO: id is used to get Graphql data.
   const {data, loading, error} = useQuery(CATEGORIES, {
-    variables: {parentId: id},
+    variables: {parent: id},
     fetchPolicy: 'cache-and-network',
   });
 
@@ -205,19 +195,19 @@ const CategoryProductsComponent = ({id, type}) => {
   return (
     <>
       {categories.length ? (
-        <RenderItems key="renderItems" items={categories} />
+        <RenderItems items={categories} />
       ) : (
-        <Products key="renderProducts" id={id} title={type} />
+        <Products id={id} title={type} />
       )}
     </>
   );
 };
 
-const RenderItems = ({items}) => {
+const RenderItems = ({title, items}) => {
   return (
     <>
       {items.map((item) => (
-        <CategoryProduct key={item.name} type={item.name} id={item.id} />
+        <CategoryProduct type={item.name} id={item.id} />
       ))}
     </>
   );
@@ -225,9 +215,9 @@ const RenderItems = ({items}) => {
 
 const Products = ({id, title}) => {
   // TODO: id is used to get Graphql data.
-  const {data, loading, error} = useQuery(PRODUCTS_BY_CATEGORY, {
+  const {data, loading, error} = useQuery(PRODUCTS, {
     variables: {
-      categoryId: id,
+      parent: id,
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -241,10 +231,10 @@ const Products = ({id, title}) => {
   }
 
   function renderCategories({item}) {
-    return buildRenderCategoryTwo(item);
+    return buildRenderCategory(item);
   }
 
-  const {productsByCategory} = data;
+  const {categories} = data;
 
   return (
     <FlatList
@@ -262,7 +252,7 @@ const Products = ({id, title}) => {
       numColumns={2}
       style={styles.products}
       contentContainerStyle={styles.products}
-      data={productsByCategory}
+      data={categories}
       renderItem={renderCategories}
       keyExtractor={(item) => `${item.id}`}
     />
@@ -280,7 +270,7 @@ const MainCategories = ({id, type, title}) => {
   // TODO: id is used to get Graphql data.
   const {data, loading, error} = useQuery(CATEGORIES, {
     variables: {
-      parentId: id,
+      parent: id,
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -305,7 +295,7 @@ const MainCategories = ({id, type, title}) => {
         <Text
           style={{
             color: '#252525',
-            fontSize: 17,
+            fontSize: 20,
             fontWeight: 'bold',
             marginBottom: 10,
           }}>
